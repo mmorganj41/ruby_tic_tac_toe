@@ -16,6 +16,10 @@ class TicTacToe
     @moves = 0
     @draws = 0
   end
+  
+  def new_board()
+    @board = Array.new(@board.length) {Array.new(@board.length, ' ')}
+  end
 
   def add_player(player)
     @players.push(player)
@@ -82,7 +86,7 @@ class TicTacToe
     moved = false
     until moved
       puts "Player #{@turn.symbol}, choose a square to move (EX: A1): "
-      square = gets 
+      square = gets.chomp
       puts "\n"
       unless /[a-z][\d*]/i.match?(square)
         puts "Incorrect Formatting, try again!"
@@ -125,6 +129,24 @@ class TicTacToe
       @draws += 1
     end
   end
+
+  def game_loop()
+    loop do
+      play()
+      puts "\n"
+      print "Stats: "
+      @players.each do |player| 
+        print "#{player.symbol} Wins-#{player.wins} "
+      end
+      print "Draws- #{@draws}\n"
+
+      puts "Type anything to play again (q to quit)?"
+      play_again = gets.chomp
+      break if play_again == 'q'
+      new_board()
+      @moves = 0
+    end
+  end
 end
 
 tic_tac_toe = TicTacToe.new(3)
@@ -132,4 +154,4 @@ player_x = Player.new('X')
 player_o = Player.new('O')
 tic_tac_toe.add_player(player_x)
 tic_tac_toe.add_player(player_o)
-tic_tac_toe.play
+tic_tac_toe.game_loop
